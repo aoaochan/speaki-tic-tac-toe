@@ -40,3 +40,7 @@ Copyright (c) 2025 aoaochan
 - HTML5
 - CSS3
 - JavaScript (바닐라)
+
+## Credits
+
+- Icons by [Icons8](https://icons8.com/)
