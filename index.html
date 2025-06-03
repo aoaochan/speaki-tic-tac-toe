@@ -1,0 +1,176 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="./favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <title>스피키 마빡</title>
+    <style>
+      @font-face {
+          font-family: 'ONE-Mobile-POP';
+          src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/ONE-Mobile-POP.woff') format('woff');
+          font-weight: normal;
+          font-style: normal;
+      }
+
+      html, body {
+        background-color: black;
+        margin: 0; padding: 0;
+        width: 100%; height: 100%; overflow: hidden;
+      }
+
+      #container {
+        display: flex; flex-direction: column;
+        justify-content: flex-start; align-items: center;
+        margin: 0; padding: 0;
+        width: 100%; height: 100%;
+      }
+
+      #app {
+        display: flex; flex-direction: column;
+        justify-content: flex-start; align-items: center;
+        margin: 0; padding: 0;
+        width: 100%; height: 100%;
+        background-image: url("https://cdn.jsdelivr.net/gh/aoaochan/speaki-tic-tac-toe@latest/back.webp");
+        background-size: cover;
+        background-repeat: no-repeat;
+      }
+
+      p {
+        font-family: 'ONE-Mobile-POP', sans-serif; font-size: 32px; color: white;
+        margin: 0; padding: 0;
+      }
+
+      #board-wrapper {
+        width: 100%; height: 100%; 
+        position: absolute; 
+        overflow: hidden;
+      }
+      #board {
+        width: 1600px;
+        position: absolute; left: 50%; top: 20%; transform: translateX(-50%);
+        object-fit: cover;
+        z-index: 1;
+      }
+      #boxes {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        position: absolute;
+        left: 0; top: 0;
+        width: 100%; height: 100%;
+        z-index: 2;
+        align-items: center;
+        justify-content: center;
+      }
+      .boxesline {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: 0;
+      }
+      .box {
+        width: 48px; height: 48px;
+        margin: 0;
+        padding: 0;
+        background: rgba(255,255,255,0.85);
+        border: 2.5px solid #222;
+        box-sizing: border-box;
+        z-index: 2;
+        pointer-events: auto;
+        transition: background 0.2s;
+        border-radius: 16px;
+        box-shadow: 0 4px 16px 0 rgba(0,0,0,0.18), 0 1.5px 4px 0 rgba(0,0,0,0.12);
+        backdrop-filter: blur(1.5px);
+      }
+      .box:hover {
+        background: rgba(255,255,255,0.95);
+      }
+      #overlay {
+        display: none;
+        position: fixed;
+        left: 0; top: 0;
+        width: 100vw; height: 100vh;
+        background: rgba(0,0,0,0.65);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      }
+      #overlay.show {
+        display: flex;
+      }
+      #overlay-message {
+        color: #fff;
+        font-size: 3rem;
+        font-family: 'ONE-Mobile-POP', sans-serif;
+        margin-bottom: 32px;
+        text-shadow: 0 2px 8px #000;
+      }
+      #retry-btn {
+        display: none;
+        font-size: 1.5rem;
+        padding: 12px 36px;
+        border-radius: 12px;
+        border: none;
+        background: #fff;
+        color: #222;
+        font-family: 'ONE-Mobile-POP', sans-serif;
+        font-weight: bold;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      #retry-btn:hover {
+        background: #e3e3e3;
+      }
+      #opponent-img {
+        position: fixed;
+        right: 4px;
+        bottom: 4px;
+        width: 120px;
+        height: auto;
+        object-fit: contain;
+        z-index: 1100;
+        border-radius: 0;
+        box-shadow: none;
+        background: none;
+        padding: 0;
+        pointer-events: none;
+        opacity: 1;
+        display: block;
+      }
+    </style> 
+  </head>
+  <body>
+    <div id="container">
+      <div id="app">
+        <p>스피키 이마로 장난치지 마세요!</p>
+        <div id="board-wrapper">
+          <img id="board" src="https://cdn.jsdelivr.net/gh/aoaochan/speaki-tic-tac-toe@latest/speaki.webp">
+          <div id="boxes">
+            <div class="boxesline"><div class="box" id="box-0"></div><div class="box" id="box-1"></div><div class="box" id="box-2"></div></div>
+            <div class="boxesline"><div class="box" id="box-3"></div><div class="box" id="box-4"></div><div class="box" id="box-5"></div></div>
+            <div class="boxesline"><div class="box" id="box-6"></div><div class="box" id="box-7"></div><div class="box" id="box-8"></div></div>
+          </div>
+        </div>
+        <img id="opponent-img" src="https://cdn.jsdelivr.net/gh/aoaochan/speaki-tic-tac-toe@latest/g1.webp" alt="상대 캐릭터" />
+        <div id="overlay">
+          <div id="overlay-message"></div>
+          <button id="retry-btn">다시하기</button>
+        </div>
+      </div>
+    </div>
+    <script type="module" crossorigin src="./index.js"></script>
+    <!-- 오디오: 배경음 및 효과음 -->
+    <audio id="bgm" src="https://cdn.jsdelivr.net/gh/aoaochan/speaki-tic-tac-toe@latest/bgm.mp3" loop preload="auto"></audio>
+    <audio id="g1lose" src="https://cdn.jsdelivr.net/gh/aoaochan/speaki-tic-tac-toe@latest/g1lose.mp3" preload="auto"></audio>
+    <audio id="g1win" src="https://cdn.jsdelivr.net/gh/aoaochan/speaki-tic-tac-toe@latest/g1win.mp3" preload="auto"></audio>
+    <audio id="g2win" src="https://cdn.jsdelivr.net/gh/aoaochan/speaki-tic-tac-toe@latest/g2win.mp3" preload="auto"></audio>
+    <audio id="g3win" src="https://cdn.jsdelivr.net/gh/aoaochan/speaki-tic-tac-toe@latest/g3win.mp3" preload="auto"></audio>
+    <audio id="g2g3lose" src="https://cdn.jsdelivr.net/gh/aoaochan/speaki-tic-tac-toe@latest/g2g3lose.mp3" preload="auto"></audio>
+  </body>
+</html>
