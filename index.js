@@ -24,7 +24,7 @@ let boardState = Array(9).fill(null); // 0~8, null|"O"|"X"
 let isPlayerTurn = true;
 let gameActive = true;
 
-const CDN = "https://cdn.jsdelivr.net/gh/aoaochan/speaki-tic-tac-toe@latest/";
+const CDN = "https://cdn.jsdelivr.net/gh/aoaochan/speaki-tic-tac-toe@main/assets/";
 const LEVELS = [
   { img: CDN + "g1.webp", ai: aiEasy },
   { img: CDN + "g2.webp", ai: aiNormal },
